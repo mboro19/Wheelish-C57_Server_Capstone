@@ -5,12 +5,9 @@ namespace Wheelish.Repositories
 {
     public interface IUserProfileRepository
     {
-        UserProfile GetByEmail(string email);
-
+        void Add(UserProfile userProfile);
+        UserProfile GetByFirebaseUserId(string firebaseUserId);
         List<UserProfile> GetAllUsers();
 
-        UserProfile GetUserById(int id);
-
-        int CreateUser(UserProfile userProfile);
     }
 }

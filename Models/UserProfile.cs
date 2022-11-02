@@ -8,9 +8,9 @@
         public string UserCity { get; set; }
         public string UserState { get; set; }
         public int UserZip { get; set; }
-        public int UserPhone { get; set; }
+        public string UserPhone { get; set; }
         public string UserEmail { get; set; }
-        private string FirebaseUserId { get; set; }
+        public string FirebaseUserId { get; set; }
 
     }
 }
