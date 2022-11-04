@@ -225,9 +225,6 @@ namespace Wheelish.Repositories
 
                     DbUtils.AddParameter(cmd, "@id", id);
 
-
-                    //var thisVehicle = new Vehicles();   
-                    //var reader = cmd.ExecuteReader();
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())

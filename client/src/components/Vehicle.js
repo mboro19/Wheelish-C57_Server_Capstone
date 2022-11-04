@@ -1,11 +1,7 @@
 import React from "react";
-import { Card, CardBody, Button} from "reactstrap";
-import { VehicleEdit } from "./VehicleEdit";
-import {Link} from 'react-router-dom';
-import { deleteVehicle } from "../modules/vehicleManager";
+import { Card, CardBody} from "reactstrap";
 
 export const Vehicles = ({ vehicle }) => {
-
   return (
     <Card >
       <CardBody>
@@ -14,10 +10,6 @@ export const Vehicles = ({ vehicle }) => {
         <p><b>Miles:</b> {vehicle.userVehicles.vehicleMiles}</p>
         <p><b>Cost:</b> ${vehicle.userVehicles.vehicleCost}</p>
         <p><b>Year:</b> {vehicle.vehicleYear}</p>
-        <Link to= {`/VehicleEdit/${vehicle.id}`}>Edit Vehicle</Link>
-        <Link onClick={()=>{deleteVehicle(vehicle.id)}} >Delete Vehicle</Link>
-
-
       </CardBody>
     </Card>
   );

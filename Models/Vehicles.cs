@@ -10,7 +10,6 @@ namespace Wheelish.Models
         public string VehicleModel { get; set; }
         public int VehicleYear { get; set; }
         public int BodyStyleId { get; set; }
-
         public UserVehicles UserVehicles { get; set; }
         public BodyStyle BodyStyle { get; set; }
 
