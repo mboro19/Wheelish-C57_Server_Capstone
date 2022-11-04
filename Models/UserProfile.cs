@@ -11,6 +11,9 @@
         public string UserPhone { get; set; }
         public string UserEmail { get; set; }
         public string FirebaseUserId { get; set; }
+        public Vehicles Vehicles { get; set; }
+        public UserVehicles UserVehicles { get; set; }
+
 
     }
 }

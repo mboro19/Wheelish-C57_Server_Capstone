@@ -45,7 +45,8 @@ namespace Wheelish.Repositories
                             UserVehicles userVehicle = new UserVehicles
                             {
                                 VehicleMiles = reader.GetInt32(reader.GetOrdinal("VehicleMiles")),
-                                VehicleCost = (float)reader.GetDouble(reader.GetOrdinal("VehicleCost"))
+                                VehicleCost = (float)reader.GetDouble(reader.GetOrdinal("VehicleCost")),
+                                UserId = reader.GetInt32(reader.GetOrdinal("UserId"))
 
                             };
                             BodyStyle bodyStyle = new BodyStyle

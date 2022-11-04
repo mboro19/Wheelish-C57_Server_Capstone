@@ -52,5 +52,14 @@ namespace Wheelish.Controllers
             return Ok(_userProfileRepository.GetAllUsers());
         }
 
+        [HttpGet]
+        [Route("getVehicleDealer/{id}")]
+
+        public IActionResult GetVehicleDealer(int id)
+        {
+            var vehicleById = _userProfileRepository.GetVehicleDealerByVehicleId(id);
+
+            return Ok(vehicleById);
+        }
     }
 }

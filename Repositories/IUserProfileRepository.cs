@@ -8,6 +8,8 @@ namespace Wheelish.Repositories
         void Add(UserProfile userProfile);
         UserProfile GetByFirebaseUserId(string firebaseUserId);
         List<UserProfile> GetAllUsers();
+        public UserProfile GetVehicleDealerByVehicleId(int id);
+
 
     }
 }

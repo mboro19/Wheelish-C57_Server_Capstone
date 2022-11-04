@@ -75,3 +75,21 @@ export const onLoginStatusChange = (onLoginStatusChangeHandler) => {
     onLoginStatusChangeHandler(!!user);
   });
 };
+
+export const GetVehicleDealer = (id) => {
+  return getToken().then((token)=>{
+    return fetch(_apiUrl + `/getVehicleDealer/${id}`,{
+      method: "GET",
+      headers:{
+        Authorization: `Bearer ${token}`
+      },
+    }).then((res)=>{
+      if(res.ok){
+        return res.json();
+      }else{
+        throw new Error("An error occurred at getvehicledealer.");
+      }
+    })
+  })
+}
+

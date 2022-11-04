@@ -111,6 +111,58 @@ namespace Wheelish.Repositories
                 }
             }
         }
+        public UserProfile GetVehicleDealerByVehicleId(int id) //see getvehiclebyid above
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    select up.UserName, up.UserAddress, up.UserCity, up.UserState, up.UserPhone, up.UserEmail 
+                    from UserProfile up
+                    join UserVehicles uv
+                    on uv.UserId = up.Id
+                    join Vehicles v
+                    on uv.VehicleId = v.Id
+                    where up.id = @id
+                    ";
+
+                    DbUtils.AddParameter(cmd, "@id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            //Vehicles vehicle = new Vehicles
+                            //{
+                            //    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+
+                            //};
+                            //UserVehicles userVehicle = new UserVehicles
+                            //{
+                            //    UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
+                            //    VehicleId = reader.GetInt32(reader.GetOrdinal("VehicleId"))
+                            //};
+
+                            UserProfile userProfile = new UserProfile
+                            {
+                                UserName = reader.GetString(reader.GetOrdinal("UserName")),
+                                UserAddress = reader.GetString(reader.GetOrdinal("UserAddress")),
+                                UserCity = reader.GetString(reader.GetOrdinal("UserCity")),
+                                UserState = reader.GetString(reader.GetOrdinal("UserState")),
+                                UserPhone = reader.GetString(reader.GetOrdinal("UserPhone")),
+                                UserEmail = reader.GetString(reader.GetOrdinal("UserEmail"))
+                            };
+                            //vehicle.UserVehicles = userVehicle;
+
+                            return userProfile;
+                        }
+                        else { return null; }
+                    }
+                }
+            }
+        }
     }
     
 }
