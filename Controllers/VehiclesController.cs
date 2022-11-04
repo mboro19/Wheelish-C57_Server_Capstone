@@ -39,17 +39,44 @@ namespace Wheelish.Controllers
             return Ok(vehicles);
         }
 
+        [Authorize]
         [HttpPost]
-
         public IActionResult AddVehicle(Vehicles vehicle)
         {
-            _vehicleRepository.AddVehicle(vehicle);
+            var currentUser = GetCurrentUserProfile();
+            _vehicleRepository.AddVehicle(vehicle, currentUser.Id);
 
             return Ok();
 
             
         }
+        [HttpGet]
+        [Route("getVehicleById/{id}")]
+        public IActionResult GetVehicleById(int id)
+        {
+            var vehicleById = _vehicleRepository.GetVehicleById(id);
 
+                return Ok(vehicleById);
+        }
+
+        [Authorize]
+        [HttpPut]
+        [Route("EditVehicle")]
+        public IActionResult EditVehicle(Vehicles vehicle)
+        {
+
+            _vehicleRepository.EditVehicle(vehicle);
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpDelete]
+        [Route("DeleteVehicle/{id}")]
+        public IActionResult DeleteVehicle(int id)
+        {
+            _vehicleRepository.DeleteVehicle(id);
+            return NoContent();
+        }
 
         private UserProfile GetCurrentUserProfile()
         {

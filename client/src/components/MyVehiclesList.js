@@ -12,7 +12,7 @@ const VehicleList = () => {
 
   useEffect(() => {
     getVehicles();
-  }, []);
+  });
 
   return (
     <div className="container">

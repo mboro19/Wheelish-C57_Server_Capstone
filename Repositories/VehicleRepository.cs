@@ -120,7 +120,94 @@ namespace Wheelish.Repositories
             }
         }
 
-        public void AddVehicle(Vehicles vehicle)
+        public void AddVehicle(Vehicles vehicle, int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand()) //primary query for Vehicles Table
+                {
+                    cmd.CommandText = @"
+                    INSERT INTO Vehicles(VehicleYear, VehicleMake, VehicleModel, BodyStyleId) 
+                    OUTPUT INSERTED.ID
+                    VALUES (@VehicleYear, @VehicleMake, @VehicleModel, @BodyStyleId)
+                    ";
+
+                    DbUtils.AddParameter(cmd, "@VehicleYear", vehicle.VehicleYear);
+                    DbUtils.AddParameter(cmd, "@VehicleMake", vehicle.VehicleMake);
+                    DbUtils.AddParameter(cmd, "@VehicleModel", vehicle.VehicleModel);
+                    DbUtils.AddParameter(cmd, "@BodyStyleId", vehicle.BodyStyleId);
+
+
+
+                    vehicle.Id = (int)cmd.ExecuteScalar();
+                }
+                using (var cmd = conn.CreateCommand()) //secondary query for UserVehicles table
+                {
+                    cmd.CommandText = @"
+                    INSERT INTO UserVehicles(VehicleId,VehicleMiles, VehicleCost, IsVehicleAvailable, UserId) 
+                    VALUES (@VehicleId, @VehicleMiles, @VehicleCost, @IsVehicleAvailable, @UserId)";
+
+                    DbUtils.AddParameter(cmd, "@VehicleId", vehicle.Id);
+                    DbUtils.AddParameter(cmd, "@VehicleMiles", vehicle.UserVehicles.VehicleMiles);
+                    DbUtils.AddParameter(cmd, "@VehicleCost", vehicle.UserVehicles.VehicleCost);
+                    DbUtils.AddParameter(cmd, "@IsVehicleAvailable", 0);
+                    DbUtils.AddParameter(cmd, "@UserId", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+
+            }
+        }
+
+
+        public void EditVehicle(Vehicles vehicle)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+
+
+                using (var cmd = conn.CreateCommand()) //primary query for Vehicles Table
+                {
+                    cmd.CommandText = @"
+                    UPDATE Vehicles
+                    SET VehicleYear = @VehicleYear, VehicleMake = @VehicleMake, VehicleModel = @VehicleModel, BodyStyleId = @BodyStyleId
+                    WHERE Vehicles.Id = @vid
+                    ";
+
+                    DbUtils.AddParameter(cmd, "@VehicleYear", vehicle.VehicleYear);
+                    DbUtils.AddParameter(cmd, "@VehicleMake", vehicle.VehicleMake);
+                    DbUtils.AddParameter(cmd, "@VehicleModel", vehicle.VehicleModel);
+                    DbUtils.AddParameter(cmd, "@BodyStyleId", vehicle.BodyStyleId);
+                    DbUtils.AddParameter(cmd, "@vid", vehicle.Id);
+
+
+
+                    cmd.ExecuteScalar();
+                }
+                using (var cmd = conn.CreateCommand()) //secondary query for UserVehicles table
+                {
+                    cmd.CommandText = @"
+                    UPDATE UserVehicles 
+                    SET VehicleMiles = @VehicleMiles, VehicleCost = @VehicleCost 
+                    WHERE UserVehicles.Id = @uvid
+                    ";
+
+                    DbUtils.AddParameter(cmd, "@VehicleMiles", vehicle.UserVehicles.VehicleMiles);
+                    DbUtils.AddParameter(cmd, "@VehicleCost", vehicle.UserVehicles.VehicleCost);
+                    DbUtils.AddParameter(cmd, "@uvid", vehicle.UserVehicles.Id);
+
+                    cmd.ExecuteScalar();
+
+                }
+
+
+            }
+        }
+
+        public Vehicles GetVehicleById(int id)
         {
             using (var conn = Connection)
             {
@@ -128,28 +215,80 @@ namespace Wheelish.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                    INSERT INTO Vehicle(VehicleYear, VehicleMake, VehicleModel, BodyStyleId) 
-                    VALUES (@vehicleYear, @vehicleMake, @vehicleModel, @bodyStyleId)
-                    INSERT INTO UserVehicles(VehicleMiles, VehicleCost, UserId) 
-                    VALUES (@vehicleMiles, @vehicleCost)
+                    SELECT v.Id, v.VehicleMake, v.VehicleModel, v.VehicleYear, uv.Id as uvid, uv.VehicleMiles, uv.VehicleCost, bs.BodyStyleName, uv.UserId, v.BodyStyleId from Vehicles v
+                    JOIN UserVehicles uv
+                    ON v.Id = uv.VehicleId
+                    JOIN BodyStyle bs
+                    ON v.BodyStyleId = bs.Id
+                    WHERE v.Id = @id
                     ";
-                    
-                    //DbUtils.AddParameter(cmd, "@userId", );
-                    DbUtils.AddParameter(cmd, "@vehicleYear", vehicle.VehicleYear);
-                    DbUtils.AddParameter(cmd, "@vehicleMake", vehicle.VehicleMake);
-                    DbUtils.AddParameter(cmd, "@vehicleModel", vehicle.VehicleModel);
-                    DbUtils.AddParameter(cmd, "@bodyStyleId", vehicle.BodyStyleId);
-                    DbUtils.AddParameter(cmd, "@vehicleMiles", vehicle.UserVehicles.VehicleMiles);
-                    DbUtils.AddParameter(cmd, "@vehicleCost", vehicle.UserVehicles.VehicleCost);
+
+                    DbUtils.AddParameter(cmd, "@id", id);
 
 
+                    //var thisVehicle = new Vehicles();   
+                    //var reader = cmd.ExecuteReader();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            Vehicles vehicle = new Vehicles
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                VehicleMake = reader.GetString(reader.GetOrdinal("VehicleMake")),
+                                VehicleModel = reader.GetString(reader.GetOrdinal("VehicleModel")),
+                                VehicleYear = reader.GetInt32(reader.GetOrdinal("VehicleYear")),
+                                BodyStyleId = reader.GetInt32(reader.GetOrdinal("BodyStyleId"))
 
+                            };
+                            UserVehicles userVehicle = new UserVehicles
+                            {
+                                VehicleMiles = reader.GetInt32(reader.GetOrdinal("VehicleMiles")),
+                                Id = reader.GetInt32(reader.GetOrdinal("uvid")),
+                                VehicleCost = (float)reader.GetDouble(reader.GetOrdinal("VehicleCost"))
 
-                    vehicle.Id = (int)cmd.ExecuteScalar();
-                    vehicle.Id = vehicle.UserVehicles.VehicleId;
-                    vehicle.UserVehicles.Id = (int)cmd.ExecuteScalar();
+                            };
+                            BodyStyle bodyStyle = new BodyStyle
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("BodyStyleId")),
+                                BodyStyleName = reader.GetString(reader.GetOrdinal("BodyStyleName"))
+                            };
+                            vehicle.BodyStyle = bodyStyle;
+                            vehicle.UserVehicles = userVehicle;
+
+                            return vehicle;
+                        }
+                        else { return null; }
+                    }
                 }
+            }
+        }
+
+        public void DeleteVehicle(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    DELETE FROM UserVehicles WHERE VehicleId = @vid
+                    ";
+                    cmd.Parameters.AddWithValue("@vid", id);
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = @"
+                    DELETE FROM Vehicles WHERE Id = @id
+                    ";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+
             }
         }
     }
 }
+                        
+
+
+

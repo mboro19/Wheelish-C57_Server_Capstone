@@ -50,7 +50,7 @@ export const login = (email, pw) => {
 
 
 export const logout = () => {
-  firebase.auth().signOut()
+  return firebase.auth().signOut()
 };
 
 

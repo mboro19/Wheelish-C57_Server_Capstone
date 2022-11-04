@@ -31,6 +31,7 @@ namespace Wheelish
         {
             services.AddTransient<IUserProfileRepository, UserProfileRepository>();
             services.AddTransient<IVehicleRepository, VehicleRepository>();
+            services.AddTransient<IUserVehicleRepository, UserVehicleRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

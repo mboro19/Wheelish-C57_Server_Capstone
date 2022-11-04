@@ -5,10 +5,15 @@ namespace Wheelish.Repositories
 {
     public interface IVehicleRepository
     {
-        void AddVehicle(Vehicles vehicles);
+        void AddVehicle(Vehicles vehicles, int id);
+        void EditVehicle(Vehicles vehicles);
 
         public List<Vehicles> GetAllUserVehicles(int id);
 
-        public List<Vehicles> GetAllVehicles();
+        public List<Vehicles> GetAllVehicles(); 
+
+        public Vehicles GetVehicleById(int id);
+
+        void DeleteVehicle(int id);
     }
 }

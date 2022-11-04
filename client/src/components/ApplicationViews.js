@@ -6,6 +6,7 @@ import Hello from "./Hello.js";
 import VehicleList from "./MyVehiclesList.js";
 import AllVehicles from "./AllVehicles.js";
 import VehicleAdd from "./VehicleAdd.js";
+import { VehicleEdit } from "./VehicleEdit.js";
 
 
 export function ApplicationViews({ isLoggedIn }) {
@@ -22,6 +23,7 @@ export function ApplicationViews({ isLoggedIn }) {
           <Route path="register" element={<Register />} />
           <Route path="MyVehiclesList" element={<VehicleList />} />
           <Route path="VehicleAdd" element={<VehicleAdd />} />
+          <Route path="VehicleEdit/:vehicleId" element={<VehicleEdit />} />
           <Route path="AllVehicles" element={<AllVehicles />} />
           <Route path="*" element={<p>Whoops, nothing here...</p>} />
         </Route>

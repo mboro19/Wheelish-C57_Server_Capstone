@@ -9,6 +9,6 @@ export default function Hello() {
       top: "50%",
       marginTop: "-0.5rem",
       textAlign: "center",
-    }}>Hello!</span>
+    }}><h1>Hello!</h1></span>
   );
 }

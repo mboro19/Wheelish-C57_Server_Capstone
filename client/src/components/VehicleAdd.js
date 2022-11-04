@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Form, FormGroup, Label, Input, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
+import { Button, Form, FormGroup, Label, Input} from "reactstrap";
 import { addVehicle } from "../modules/vehicleManager";
-import { DropdownProps } from "reactstrap";
 
 
 
@@ -13,61 +12,61 @@ import { DropdownProps } from "reactstrap";
 export default function VehicleAdd() {
   const navigate = useNavigate();
 
-  const [vehicleYear, setVehicleYear] = useState();
-  const [vehicleMake, setVehicleMake] = useState();
-  const [vehicleModel, setVehicleModel] = useState();
-  const [bodyStyleId, setBodyStyleId] = useState();
-  const [vehicleMiles, setVehicleMiles] = useState();
-  const [vehicleCost, setVehicleCost] = useState();
+  const [VehicleYear, setVehicleYear] = useState();
+  const [VehicleMake, setVehicleMake] = useState();
+  const [VehicleModel, setVehicleModel] = useState();
+  const [BodyStyleId, setBodyStyleId] = useState();
+  const [VehicleMiles, setVehicleMiles] = useState();
+  const [VehicleCost, setVehicleCost] = useState();
 
 
   const registerClick = (e) => {
     e.preventDefault();
 
         const newVehicle = {
-        vehicleYear,
-        vehicleMake,
-        vehicleModel,
-        bodyStyleId,
-        vehicleMiles,
-        vehicleCost
+        VehicleYear,
+        VehicleMake,
+        VehicleModel,
+        BodyStyleId,
+        UserVehicles : {VehicleMiles,
+        VehicleCost}
         
       };
       console.log(newVehicle)
       if(newVehicle.bodyStyleId === null){alert("Please select a valid body style.")}else{
-      addVehicle(newVehicle).then(() => navigate("/MyVehicleList"));};
+      addVehicle(newVehicle).then(() => navigate("/MyVehiclesList"));};
   }
   return (
     <Form onSubmit={registerClick}><div><h4><b>Add A Vehicle...</b></h4></div>
       <fieldset>
         <FormGroup>
-          <Label htmlFor="vehicleYear"><b>Vehicle Year</b>  </Label>
+          <Label htmlFor="VehicleYear"><b>Vehicle Year</b>  </Label>
           <Input
-            id="vehicleYear"
+            id="VehicleYear"
             type="text"
             onChange={(e) => setVehicleYear(e.target.value)}
           />
         </FormGroup>
         <FormGroup>
-          <Label htmlFor="vehicleMake"><b>Vehicle Make</b>  </Label>
+          <Label htmlFor="VehicleMake"><b>Vehicle Make</b>  </Label>
           <Input
-            id="vehicleMake"
+            id="VehicleMake"
             type="text"
             onChange={(e) => setVehicleMake(e.target.value)}
           />
         </FormGroup>
         <FormGroup>
-          <Label htmlFor="vehicleModel"><b>Vehicle Model</b>  </Label>
+          <Label htmlFor="VehicleModel"><b>Vehicle Model</b>  </Label>
           <Input
-            id="vehicleModel"
+            id="VehicleModel"
             type="text"
             onChange={(e) => setVehicleModel(e.target.value)}
           />
         </FormGroup>
         <FormGroup>
-          <Label for="bodyStyle"><b>Body Style</b></Label>
+          <Label for="BodyStyle"><b>Body Style</b></Label>
           <p></p>
-          <select name="bodyStyle"
+          <select name="BodyStyle"
             onChange={(e) => setBodyStyleId(e.target.value)}>
             <option value={null}>Select One</option>
             <option value={1}>Car</option>
@@ -79,17 +78,17 @@ export default function VehicleAdd() {
           
         </FormGroup>
         <FormGroup>
-          <Label htmlFor="vehicleMiles"><b>Vehicle Miles</b>  </Label>
+          <Label htmlFor="VehicleMiles"><b>Vehicle Miles</b>  </Label>
           <Input
-            id="vehicleMiles"
+            id="VehicleMiles"
             type="text"
             onChange={(e) => setVehicleMiles(e.target.value)}
           />
         </FormGroup>
         <FormGroup>
-          <Label htmlFor="vehicleCost"><b>Vehicle Cost</b>  </Label>
+          <Label htmlFor="VehicleCost"><b>Vehicle Cost</b>  </Label>
           <Input
-            id="vehicleCost"
+            id="VehicleCost"
             type="text"
             onChange={(e) => setVehicleCost(e.target.value)}
           />
